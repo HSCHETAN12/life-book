@@ -1,17 +1,23 @@
 package org.jsp.life_book.Controller;
 
 import org.jsp.life_book.dto.User;
-
+import org.jsp.life_book.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
 
 @Controller
 public class AppController {
+	
+	@Autowired
+	UserService service;
 		//the givnen method is just load or return to the login.html file when the path is locahost:{/,/login}
 	//in the browser
 	@GetMapping({"/","/login"})
@@ -29,8 +35,7 @@ public class AppController {
 	@GetMapping("/register")
 	public String loadregister(ModelMap map,User user)
 	{
-		map.put("user", user);
-		return "register.html";
+		return service.loadregister(map,user);
 		
 	}
 	
@@ -52,16 +57,19 @@ public class AppController {
 	@PostMapping("/register")
 	public String register(@Valid User user,BindingResult result)
 	{
-		if(!(user.getPassword()).equals(user.getConfirmpassword()))
-		{
-			result.rejectValue("confirmpassword","error.confirmpassword", "Password Not Matching");
-		}
-		if(result.hasErrors())
-		{
-			return "register.html";
-		}
-		else {
-		return "redirect:https://www.youtube.com";
+		return service.register(user,result);
 	}
-}
+	
+	@GetMapping("/otp/{id}")
+	public String loadotp(@PathVariable int id,ModelMap map)
+	{
+		map.put("id", id);
+		return "verify.html";
+	}
+	
+	@PostMapping("/verify-otp")
+	public String verify(@RequestParam int otp,@RequestParam int id)
+	{
+		return service.verifyotp(otp, id);
+	}
 }
