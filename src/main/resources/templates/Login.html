@@ -13,11 +13,19 @@
         }
 
         body {
+            /* background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; */
+        }
+        #main{
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+
         }
 
         .login-container {
@@ -92,6 +100,12 @@
     </style>
 </head>
 <body>
+    <div class="message">
+        <h3 style="color: green; text-align: center;" th:text="${session.pass}"></h3>
+        <h3 style="color: red; text-align: center;" th:text="${session.fail}"></h3>
+        <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+        <div id="main">
     <div class="login-container">
         <h2 class="login-title">Login</h2>
         <form action="/login" method="POST">
@@ -109,5 +123,6 @@
             <p>Don't have an account? <a href="/register">Register here</a></p>
         </div>
     </div>
+</div>
 </body>
 </html></div>
