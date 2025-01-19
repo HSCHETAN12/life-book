@@ -8,10 +8,10 @@
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <style>
         :root {
-            --primary-color: #0095f6;
-            --secondary-color: #00376b;
-            --background-color: #fafafa;
-            --border-color: #dbdbdb;
+            --primary-color: #009688; /* Teal */
+            --secondary-color: #333333; /* Dark Gray */
+            --background-color: #F5F5F5; /* Light Gray */
+            --border-color: #DDDDDD; /* Lighter Gray */
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -25,7 +25,7 @@
         body {
             background-color: var(--background-color);
             font-size: 16px;
-            color: #333;
+            color: var(--secondary-color);
         }
 
         a {
@@ -72,7 +72,7 @@
         }
 
         .nav-right button:hover {
-            background-color: var(--secondary-color);
+            background-color: #00796B; /* Darker Teal */
         }
 
         .profile-container {
@@ -163,7 +163,7 @@
         #Post h1 {
             margin-bottom: 20px;
             font-size: 24px;
-            color: #333;
+            color: var(--secondary-color);
         }
 
         #Post .post-item {
@@ -171,11 +171,11 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             padding: 10px;
             width: 100%;
             max-width: 350px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
             border-radius: 5px;
         }
 
@@ -200,7 +200,7 @@
 
         #Post .post-item button {
             padding: 5px 15px;
-            background-color: #0095f6;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 4px;
@@ -210,7 +210,7 @@
         }
 
         #Post .post-item button:hover {
-            background-color: #00376b;
+            background-color: #00796B; /* Darker Teal */
         }
 
         #Post .post-item button:focus {
@@ -318,7 +318,7 @@
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo">
-                <a href="/home" style="text-decoration: none;"><h1 style="color: #0f0b0b;">Life-Book</h1></a>
+                <a href="/home"><img src="/images/jspgram-logo.png" alt="JspGram Logo"></a>
             </div>
             <div class="nav-right">
                 <a href="/home"><button class="profile-button">Home</button></a>
@@ -326,12 +326,6 @@
             </div>
         </div>
     </nav>
-
-    <div class="message">
-        <h3 class="success-message" th:text="${session.pass}"></h3>
-        <h3 class="error-message" th:text="${session.fail}"></h3>
-        <th:block th:text="${@messageRemover.remove()}"></th:block>
-    </div>
     <main class="profile-container">
         <section class="profile-header">
             <img th:if="${session.user.imageUrl==null}" src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="Profile Picture" class="profile-picture">
@@ -349,21 +343,14 @@
             <div class="stat-item">
                 <h3>Posts</h3>
                 <span>0</span>
-                <span th:if="${posts==null}">0</span>
-                <span th:if="${posts}" th:text="${posts.size()}"></span>
             </div>
             <div class="stat-item">
                 <h3>Followers</h3>
                 <span>0</span>
-                <span th:text="${session.user.followers.size()}"></span>
             </div>
             <div class="stat-item">
                 <h3>Following</h3>
                 <span>0</span>
-                <span th:text="${session.user.following.size()}"></span>
-            </div>
-            <div class="stat-item">
-                <a href="/suggestions"><button>Suggestions</button></a>
             </div>
         </section>
         <a href="/add-post"><button class="add-post-btn">Add New Post</button></a>
@@ -376,7 +363,7 @@
             <span th:text="${post.caption}"></span>
             <span th:text="${post.postedTime}"></span>
             <div>
-              <a th:href="'/edit-post/'+${post.id}"><button>Edit</button></a>
+              <a href="'/edit-post/'+${post.id}"><button>Edit</button></a>
                 <a th:href="'/delete/'+${post.id}"><button>Delete</button></a>
             </div>
         </div>

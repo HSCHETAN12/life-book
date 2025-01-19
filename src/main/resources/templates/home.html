@@ -41,6 +41,7 @@
         }
         .logo img {
             width: 103px;
+            height: 10px;
             height: auto;
         }
         .nav-right {
@@ -114,7 +115,7 @@
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo">
-                <a href="/home"><img src="/images/jspgram-logo.png" alt="JspGram Logo"></a>
+                <a href="/home" style="text-decoration: none;"><h1 style="color: #0f0b0b;">Life-Book</h1></a>
             </div>
             <div class="nav-right">
                 <a href="/profile"><button class="profile-button">Profile</button></a>
@@ -124,6 +125,12 @@
             </div>
         </div>
     </nav>
+    <div class="message">
+        <h3 class="success-message" th:text="${session.pass}"></h3>
+        <h3 class="error-message" th:text="${session.fail}"></h3>
+        <th:block th:text="${@messageRemover.remove()}"></th:block>
+    </div>
+
     <main class="main-content">
         <div class="all-caught-up">
             <div class="checkmark-circle">

@@ -5,7 +5,9 @@ package org.jsp.life_book.dto;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,10 +21,10 @@ public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private String ImageUrl;
+	@Column(name = "image_url")
+	private String imageUrl;
 	private String caption;
-	@CreationTimestamp
+	@UpdateTimestamp
 	private LocalDateTime PostedTime;
 	@ManyToOne
 	private User user;

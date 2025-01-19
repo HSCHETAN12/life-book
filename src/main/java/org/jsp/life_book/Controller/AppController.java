@@ -1,7 +1,9 @@
 package org.jsp.life_book.Controller;
 
 import org.eclipse.angus.mail.handlers.multipart_mixed;
+import org.jsp.life_book.dto.Post;
 import org.jsp.life_book.dto.User;
+import org.jsp.life_book.repository.UserRepository;
 import org.jsp.life_book.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -102,9 +105,9 @@ public class AppController {
 	}
 	
 	@GetMapping("/profile")
-	public String profile1(HttpSession session)
+	public String profile1(HttpSession session,ModelMap map)
 	{
-		return service.profile(session);
+		return service.profile(session,map);
 	}
 	
 	@GetMapping("/edit-profile")
@@ -119,5 +122,42 @@ public class AppController {
 		return service.updateProfile(session,image,bio);
 	}
 	
+	@GetMapping("/add-post")
+	public String addpost(HttpSession session)
+	{
+		return service.addpost(session);
+	}
 	
+	@PostMapping("/add-post")
+	public String updatepost(HttpSession session, Post post,@RequestParam MultipartFile image)
+	{
+		return service.updatepost(session,post,image);
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String deletPost(@PathVariable int id,HttpSession session)
+	{
+		return service.deletePost(id,session);
+	}
+	
+	@GetMapping("/edit-post/{id}")
+	public String editpost(@PathVariable int id,HttpSession session,ModelMap map)
+	{
+		return service.editpost(id,session,map);
+	}
+	
+	@GetMapping("/suggestions")
+	public String suggestions(HttpSession session,ModelMap map) {
+		return service.viewSuggestions(session,map);
+	}
+	
+	@GetMapping("/follow/{id}")
+	public String follow(@PathVariable int id,HttpSession session) {
+		return service.followUser(id,session);
+	}
+	
+	@PostMapping("/update-post")
+	public String updatePost(Post post, HttpSession session,@RequestParam MultipartFile image) throws Exception {
+		return service.updatePost(post, session,image);
+	}
 }

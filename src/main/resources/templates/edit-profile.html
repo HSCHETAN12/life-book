@@ -3,13 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 40%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #555;
+            display: block;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            padding: 5px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
-    <form action="/update-profile" method="post" enctype="multipart/form-data">
-        Profile Picture : <input type="file" name="image"required><br><br>
-        Bio : <input type="text" name="bio" required><br><br>
-        <button>Update</button>
-    </form>
+    <div class="container">
+        <h1>Update Profile</h1>
+        <form action="/update-profile" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="image">Profile Picture:</label>
+                <input type="file" name="image" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Bio:</label>
+                <input type="text" name="bio" required>
+            </div>
+
+            <button type="submit">Update</button>
+        </form>
+    </div>
 </body>
 </html>

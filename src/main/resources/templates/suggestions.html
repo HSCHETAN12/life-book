@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* General styling for the body and viewport */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;  /* Light background for a clean look */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Styling for the table container */
+        table {
+            width: 80%;
+            max-width: 900px;
+            border-collapse: collapse;
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners for a soft look */
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        /* Styling for table headers and cells */
+        td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            color: #333; /* Darker text color for better readability */
+        }
+
+        /* Styling for image elements */
+        img {
+            height: 100px;
+            width: 100px;
+            border-radius: 50%; /* Circular profile images */
+            border: 2px solid #ddd; /* Light border around images */
+            object-fit: cover; /* Ensures proper image cropping */
+        }
+
+        /* Button styling */
+        button {
+            background-color: #4CAF50; /* Green background for buttons */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        /* Styling for "Follow" link buttons */
+        a button {
+            background-color: #007BFF; /* Blue background for the follow button */
+        }
+
+        a button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Styling for table rows on hover */
+        tr:hover {
+            background-color: #f1f1f1; /* Light gray background on row hover */
+        }
+
+        /* Ensuring the table and elements are responsive */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            img {
+                height: 80px;
+                width: 80px;
+            }
+
+            button {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table border="1">
+        <tr th:each="suggestion:${suggestions}">
+            <td>
+                <img th:src="${suggestion.imageUrl != null ? suggestion.imageUrl : 'https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png'}" alt="Profile Picture" class="profile-picture">
+            </td>
+            <td th:text="${suggestion.username}"></td>
+            <td><button>View Profile</button></td>
+            <td><a th:href="'/follow/'+${suggestion.id}"><button>Follow</button></a></td>
+        </tr>
+    </table>
+</body>
+</html>

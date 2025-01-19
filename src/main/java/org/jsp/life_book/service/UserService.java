@@ -1,12 +1,15 @@
 package org.jsp.life_book.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-
+import org.jsp.life_book.dto.Post;
 import org.jsp.life_book.dto.User;
 import org.jsp.life_book.helper.AES;
 import org.jsp.life_book.helper.CloudinaryHelper;
 import org.jsp.life_book.helper.EmailSender;
+import org.jsp.life_book.repository.PostRepository;
 import org.jsp.life_book.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,9 @@ public class UserService {
 	
 	@Autowired
 	CloudinaryHelper cloudinaryHelper;
+	
+	@Autowired
+	PostRepository postRepository;
 	
 
 	public String loadregister(ModelMap map, User user) {
@@ -67,7 +73,6 @@ public class UserService {
 		}
 		return null;
 	}
-
 
 	public String verifyotp(int otp, int id, HttpSession session) {
 		User user=repository.findById(id).get();
@@ -134,10 +139,8 @@ public class UserService {
 			}
 		}
 	}
-	
-	
 
-	public static String loadHome(HttpSession session) {
+	public  String loadHome(HttpSession session) {
 		User user=(User)session.getAttribute("user");
 		if(user!=null)
 		{
@@ -149,15 +152,20 @@ public class UserService {
 		}
 	}
 
-	public static String logout(HttpSession session) {
+	public  String logout(HttpSession session) {
 		session.removeAttribute("user");
 		session.setAttribute("pass", "Logout sucessfully");
 		return "redirect:/login";
 	}
 
-	public static String profile(HttpSession session) {
+	public  String profile(HttpSession session, ModelMap map) {
 		User user = (User) session.getAttribute("user");
 		if (user != null) {
+			List<Post> posts=postRepository.findByUser(user);
+			if(!posts.isEmpty())
+			{
+				map.put("posts", posts);
+			}
 			return "profile.html";
 		} else {
 			session.setAttribute("fail", "Invalid Session");
@@ -165,7 +173,7 @@ public class UserService {
 		}
 	}
 
-	public static String editProfile(HttpSession session) {
+	public  String editProfile(HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		if (user != null) {
 			return "edit-profile.html";
@@ -188,7 +196,132 @@ public class UserService {
 			return "redirect:/login";
 		}
 	}
-	
-	
 
-}
+	public  String addpost(HttpSession session) {
+		User user=(User)session.getAttribute("user");
+		if(user!=null)
+		{
+			return "addPost.html";
+		}else{
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+
+	public  String updatepost(HttpSession session, Post post, MultipartFile image) {
+		User user=(User)session.getAttribute("user");
+		if(user!=null)
+		{
+			post.setCaption(post.getCaption());
+			post.setImageUrl(cloudinaryHelper.savePost(image));
+			post.setUser(user);
+			postRepository.save(post);
+			
+			session.setAttribute("pass", "Posted Success");
+			return "redirect:/profile";
+		}else{
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+
+	public String deletePost(int id, HttpSession session) {
+		
+		
+		User user=(User)session.getAttribute("user");
+		if(user!=null)
+		{
+		Post post=postRepository.findById(id).get();
+		postRepository.deleteById(id);
+		String publicId=cloudinaryHelper.getPublicIdFromUrl(post.getImageUrl());
+		System.out.println(publicId);
+		cloudinaryHelper.deletePost(publicId);
+		
+		session.setAttribute("pass", "Post deleted successfull");
+		return "redirect:/profile";
+			
+		}else{
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+		
+	}
+
+
+
+	public String viewSuggestions(HttpSession session, ModelMap map) {
+		
+			User user = (User) session.getAttribute("user");
+			if (user != null) {
+				List<User> suggestions = repository.findByVerifiedTrue();
+				List<User> usersToRemove = new ArrayList<User>();
+				for (User suggestion : suggestions) {
+					if (suggestion.getId() == user.getId()) {
+						usersToRemove.add(suggestion);
+					}
+					for (User followingUser : user.getFollowing()) {
+						if (followingUser.getId() == suggestion.getId()) {
+							usersToRemove.add(suggestion);
+						}
+					}
+				}
+				if (suggestions.isEmpty()) {
+					session.setAttribute("fail", "No Suggestions");
+					return "redirect:/profile";
+				} else {
+					suggestions.removeAll(usersToRemove);
+					map.put("suggestions", suggestions);
+					return "suggestions.html";
+				}
+			} else {
+				session.setAttribute("fail", "Invalid Session");
+				return "redirect:/login";
+			}
+		}
+
+	public String followUser(int id, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			User folllowedUser = repository.findById(id).get();
+			user.getFollowing().add(folllowedUser);
+			folllowedUser.getFollowers().add(user);
+			repository.save(user);
+			repository.save(folllowedUser);
+			return "redirect:/profile";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+
+	public String updatePost(Post post, HttpSession session, MultipartFile image) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			if(!(image.isEmpty()))
+			post.setImageUrl(cloudinaryHelper.saveImage(image));
+			else
+				post.setImageUrl(postRepository.findById(post.getId()).get().getImageUrl());
+			post.setUser(user);
+			postRepository.save(post);
+			session.setAttribute("pass", "Updated Success");
+			return "redirect:/profile";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	
+	public String editpost(int id, HttpSession session,ModelMap map) {
+		User user=(User)session.getAttribute("user");
+		if(user!=null)
+		{
+			Post post = postRepository.findById(id).get();
+			map.put("post", post);
+			return "edit-post.html";
+		}
+		else{
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	}
