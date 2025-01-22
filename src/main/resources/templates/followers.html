@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Followers</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8; /* Light grayish background for freshness */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50; /* Darker text for better readability */
+            margin-top: 30px;
+            font-size: 2.5em; /* Slightly larger heading */
+            letter-spacing: 2px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 85%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #34495e;
+        }
+
+        th {
+            background-color: #3498db; /* Vibrant blue header */
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ecf0f1; /* Light gray background for even rows */
+        }
+
+        tr:hover {
+            background-color: #d0e6f7; /* Soft blue hover effect */
+        }
+
+        /* Image Styling */
+        img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3498db; /* Blue border around the profile picture */
+        }
+
+        /* Button Styling */
+        button {
+            background-color: #1abc9c; /* Fresh greenish-blue for buttons */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #16a085; /* Darker greenish-blue on hover */
+            transform: translateY(-2px); /* Subtle lift effect */
+        }
+
+        /* Link Styling */
+        a {
+            text-decoration: none;
+        }
+
+        /* Profile Button and Follow/Unfollow Button Styles */
+        td a button {
+            margin-top: 5px;
+        }
+
+        /* Center-align the buttons vertically */
+        td {
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Followers</h1>
+    <table border="1">
+        <tr th:each="user:${followers}">
+            <td>
+                <img th:if="${user.imageUrl==null}"
+                    src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
+                    alt="Profile Picture" class="profile-picture">
+                <img th:if="${user.imageUrl}" th:src="${user.imageUrl}" alt="Profile Picture"
+                    class="profile-picture">
+            </td>
+            <td th:text="${user.username}"></td>
+            
+            <td><a th:href="'/view-profile/'+${user.id}"><button>View Profile</button></a></td>
+            <td>
+                <a th:if="${!user.isFollowing()}" th:href="'/follow/'+${user.id}"><button>Follow</button></a>
+                <a th:if="${user.isFollowing()}" th:href="'/unfollow/'+${user.id}"><button>Un-Follow</button></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

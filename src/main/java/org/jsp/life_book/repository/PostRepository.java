@@ -15,6 +15,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	 @Transactional
 	void deleteByImageUrl(String imageUrl);
 
+	List<Post> findByUserIn(List<User> users);
+
 //	void deleteByImageUrl(String imageUrl);
 
 

@@ -93,9 +93,9 @@ public class AppController {
 	}
 	
 	@GetMapping("/home")
-	public String profile(HttpSession session)
+	public String profile(HttpSession session,ModelMap map)
 	{
-		return service.loadHome(session);
+		return service.loadHome(session,map);
 	}
 	
 	@GetMapping("/logout")
@@ -159,5 +159,25 @@ public class AppController {
 	@PostMapping("/update-post")
 	public String updatePost(Post post, HttpSession session,@RequestParam MultipartFile image) throws Exception {
 		return service.updatePost(post, session,image);
+	}
+	
+	@GetMapping("/followers")
+	public String getFollowers(HttpSession session,ModelMap map) {
+		return service.getFollowers(session,map);
+	}
+	
+	@GetMapping("/following")
+	public String getFollowing(HttpSession session,ModelMap map) {
+		return service.getFollowing(session,map);
+	}
+	
+	@GetMapping("/unfollow/{id}")
+	public String unfollow(@PathVariable int id,HttpSession session) {
+		return service.unfollow(session,id);
+	}
+	
+	@GetMapping("/view-profile/{id}")
+	public String viewProfile(@PathVariable int id,HttpSession session,ModelMap map) {
+		return service.viewProfile(id,session,map);
 	}
 }
