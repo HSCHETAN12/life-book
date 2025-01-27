@@ -1,9 +1,12 @@
 package org.jsp.life_book.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Random;
+import org.json.JSONObject;
 
+import org.jsp.life_book.dto.Comment;
 import org.jsp.life_book.dto.Post;
 import org.jsp.life_book.dto.User;
 import org.jsp.life_book.helper.AES;
@@ -15,8 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -122,7 +128,7 @@ public class UserService {
 				{
 					session.setAttribute("user", user);
 					session.setAttribute("pass", "Login Success");
-					return "home.html";
+					return "redirect:/home";
 				}
 				else {
 					int otp=new Random().nextInt(100000,1000000);
@@ -401,6 +407,114 @@ public class UserService {
 				map.put("posts", posts);
 			map.put("user", checkedUser);
 			return "view-profile.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+
+	public String likePost(int id, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			Post post = postRepository.findById(id).get();
+		
+//			boolean flag=true;
+//			
+//			for (User likedUser : post.getLikedUsers()) {
+//				if (likedUser.getId() == user.getId()) {
+//					flag=false;
+//					break;
+//				}
+			post.getLikedUsers().add(user);
+			postRepository.save(post);
+			return "redirect:/home";
+			}
+//			if(flag) {
+//				post.getLikedUsers().add(user);
+//			}
+//			postRepository.save(post);
+//			return "redirect:/home";
+//		} 
+		else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+
+	public String dislikePost(int id, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			Post post = postRepository.findById(id).get();
+			
+			for (User likedUser : post.getLikedUsers()) {
+				if (likedUser.getId() == user.getId()) {
+					post.getLikedUsers().remove(likedUser);
+					break;
+				}
+			}
+			postRepository.save(post);
+			return "redirect:/home";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	
+	public String loadCommentPage(int id, HttpSession session, ModelMap map) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			map.put("id", id);
+			return "comment.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	public String comment(int id, HttpSession session, String comment) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			Post post = postRepository.findById(id).get();
+			
+			Comment userComment=new Comment();
+			userComment.setComment(comment);
+			userComment.setUser(user);
+			
+			post.getComments().add(userComment);
+			postRepository.save(post);
+			return "redirect:/home";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	
+	public String prime(HttpSession session, ModelMap map) throws RazorpayException {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			RazorpayClient client = new RazorpayClient("rzp_test_6Lg2WKKGqBxoM2", "dVaKTcvZ8bMdDAPSuLGBkzUa");
+			JSONObject object = new JSONObject();
+			object.put("amount", 19900);
+			object.put("currency", "INR");
+			Order order = client.orders.create(object);
+			map.put("key", "rzp_test_6Lg2WKKGqBxoM2");
+			map.put("amount", order.get("amount"));
+			map.put("currency", order.get("currency"));
+			map.put("orderId", order.get("id"));
+			map.put("user", user);
+			return "payment.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session");
+			return "redirect:/login";
+		}
+	}
+	public String prime(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			user.setPrime(true);
+			repository.save(user);
+			
+			session.setAttribute("user", user);
+			return "redirect:/profile";
 		} else {
 			session.setAttribute("fail", "Invalid Session");
 			return "redirect:/login";

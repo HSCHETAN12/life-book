@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <meta name="description" content="JspGram - Your Social Media Feed">
     <title>JspGram - Home</title>
+    <meta name="description" content="JspGram - Your Social Media Feed">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <style>
         :root {
@@ -13,16 +12,23 @@
             --secondary-color: #00376b;
             --background-color: #fafafa;
             --border-color: #dbdbdb;
+            --card-bg-color: #ffffff;
+            --card-border-color: #dbdbdb;
+            --text-color: #262626;
+            --caption-color: #8e8e8e;
         }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
+
         body {
             background-color: var(--background-color);
         }
+
         .navbar {
             background-color: white;
             border-bottom: 1px solid var(--border-color);
@@ -32,6 +38,7 @@
             top: 0;
             z-index: 1000;
         }
+
         .nav-content {
             max-width: 975px;
             margin: 0 auto;
@@ -39,16 +46,18 @@
             justify-content: space-between;
             align-items: center;
         }
+       
         .logo img {
             width: 103px;
-            height: 10px;
             height: auto;
         }
+
         .nav-right {
             display: flex;
             align-items: center;
             gap: 1.5rem;
         }
+
         .profile-button,
         .logout-button {
             padding: 0.5rem 1rem;
@@ -57,25 +66,126 @@
             font-weight: 600;
             cursor: pointer;
         }
+
         .profile-button {
             background: none;
             border: none;
             color: var(--secondary-color);
         }
+
         .logout-button {
             background-color: var(--primary-color);
             border: none;
             color: white;
         }
+
         .main-content {
-            max-width: 600px;
+            max-width: 900px; /* Increased to make the cards more centered */
             margin: 100px auto 0;
             padding: 2rem;
             text-align: center;
         }
+
+        /* Post Card Styling */
+        .post {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--card-border-color);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* Increased the card size */
+            margin-left: 50%;
+            margin-right: 50%; /* Centering the cards */
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .post-header img {
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .post-header span {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .post-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .post-caption {
+            color: var(--caption-color);
+            font-size: 0.875rem;
+            margin: 10px 0;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-footer span {
+            color: var(--caption-color);
+            font-size: 0.875rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .like-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .comment-button {
+            background-color: #0095f6;
+            color: white;
+        }
+
+        /* Layout adjustments for a responsive grid */
+        .post-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .post-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        /* Caught up section */
         .all-caught-up {
             padding: 3rem 0;
+            text-align: center;
         }
+
         .checkmark-circle {
             width: 100px;
             height: 100px;
@@ -86,75 +196,104 @@
             align-items: center;
             justify-content: center;
         }
+
         .checkmark-circle svg {
             width: 50px;
             height: 50px;
             color: white;
         }
+
         .caught-up-text {
             font-size: 1.5rem;
             color: #262626;
             margin-bottom: 0.5rem;
         }
+
         .caught-up-subtext {
             color: #8e8e8e;
             font-size: 0.875rem;
         }
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 0.75rem 1rem;
-            }
-            .nav-content {
-                padding: 0 1rem;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1>Home</h1>
-    <nav class="navbar">
-        <div class="nav-content">
-            <div class="logo">
-                <a href="/home" style="text-decoration: none;"><h1 style="color: #0f0b0b;">Life-Book</h1></a>
-            </div>
-            <div class="nav-right">
-                <a href="/profile"><button class="profile-button">Profile</button></a>
 
-    <h2 th:text="${session.user.firstname}"></h2>
-                <a href="/logout"> <button type="submit" class="logout-button">Logout</button></a>
-            </div>
-        </div>
-    </nav>
     <div class="message">
-        <h3 class="success-message" th:text="${session.pass}"></h3>
+        <h3 class="success-message" style="color: greenyellow;" th:text="${session.pass}"></h3>
         <h3 class="error-message" th:text="${session.fail}"></h3>
         <th:block th:text="${@messageRemover.remove()}"></th:block>
     </div>
 
-    <main class="main-content">
-        <div th:if="${posts}">
-            <div th:each="post:${posts}">
-                <img height="50px" width="50px" th:src="${post.user.imageUrl}">
-                <span th:text="${post.user.username}"></span>
-                <img height="250px" width="250px" th:src="${post.imageUrl}">
-                <span th:text="${post.caption}"></span>
-                <span th:text="${post.postedTime}"></span>
-                <button>Like</button>
-                <button>Comment</button>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <a href="/home" style="text-decoration: none;">
+                    <h1 style="color: #0f0b0b; font-style: italic;">Life-Book</h1>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/profile"><button class="profile-button">Profile</button></a>
+                <h2 th:text="${session.user.firstname}"></h2>
+                <a href="/logout"><button type="submit" class="logout-button">Logout</button></a>
             </div>
         </div>
-        <div class="all-caught-up">
-            <div class="checkmark-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
+    </nav>
+
+    <main class="main-content">
+        <div class="post-container">
+            <div th:if="${posts}" class="posts1">
+                <div th:each="post:${posts}" class="post">
+                    <!-- Post Header -->
+                    <div class="post-header">
+                        <img th:if="${post.user.imageUrl != null}" height="50px" width="50px" th:src="${post.user.imageUrl}" />
+                        <img th:if="${post.user.imageUrl == null}" height="50px" width="50px" src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="Profile Picture" />
+                        <span th:text="${post.user.username}"></span>
+                    </div>
+
+                    <!-- Post Image -->
+                    <img class="post-img" th:src="${post.imageUrl}" alt="Post Image" />
+
+                    <!-- Post Caption -->
+                    <div class="post-caption">
+                        <span th:text="${post.caption}"></span>
+                    </div>
+
+                    <!-- Post Footer -->
+                    <div class="post-footer">
+                        <span th:text="${post.likedUsers.size()} + ' Likes'"></span>
+                        <span th:text="${post.postedTime}"></span>
+                    </div>
+
+                    <!-- Post Actions -->
+                    <div class="post-actions">
+                        <a th:if="${!post.hasLiked(session.user.id)}" th:href="'/like/'+${post.id}">
+                            <button class="action-button like-button">Like</button>
+                        </a>
+                        <a th:if="${post.hasLiked(session.user.id)}" th:href="'/dislike/'+${post.id}">
+                            <button class="action-button like-button">Dislike</button>
+                        </a>
+                        <a th:href="'/comment/'+${post.id}">
+                            <button class="action-button comment-button">Comment</button>
+                        </a>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div th:each="comment:${post.comments}">
+                        <span th:text="${comment.user.username}"></span>
+                        <span th:text="${comment.comment}"></span>
+                    </div>
+                </div>
             </div>
-            <h2 class="caught-up-text">You're All Caught Up</h2>
-            <p class="caught-up-subtext">You've seen all new posts</p>
         </div>
     </main>
+
+    <div class="all-caught-up">
+        <div class="checkmark-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <h2 class="caught-up-text">You're All Caught Up</h2>
+        <p class="caught-up-subtext">You've seen all new posts</p>
+    </div>
 </body>
 </html>
-</html>
-</div>
-</form>

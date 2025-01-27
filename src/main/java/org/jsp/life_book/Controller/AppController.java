@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.razorpay.RazorpayException;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -179,5 +181,33 @@ public class AppController {
 	@GetMapping("/view-profile/{id}")
 	public String viewProfile(@PathVariable int id,HttpSession session,ModelMap map) {
 		return service.viewProfile(id,session,map);
+	}
+	@GetMapping("/like/{id}")
+	public String likePost(@PathVariable int id,HttpSession session) {
+		return service.likePost(id,session);
+	}
+	
+	@GetMapping("/dislike/{id}")
+	public String dislikePost(@PathVariable int id,HttpSession session) {
+		return service.dislikePost(id,session);
+	}
+	
+	@GetMapping("/comment/{id}")
+	public String loadCommentPage(@PathVariable int id, HttpSession session, ModelMap map) {
+		return service.loadCommentPage(id, session, map);
+	}
+	@PostMapping("/comment/{id}")
+	public String comment(@PathVariable int id, HttpSession session, @RequestParam String comment) {
+		return service.comment(id,session,comment);
+	}
+	
+	@GetMapping("/prime")
+	public String prime(HttpSession session, ModelMap map) throws RazorpayException {
+		return service.prime(session, map);
+	}
+	
+	@PostMapping("/prime")
+	public String prime(HttpSession session) throws RazorpayException {
+		return service.prime(session);
 	}
 }

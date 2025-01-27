@@ -323,7 +323,7 @@
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo">
-                <a href="/home" style="text-decoration: none;"><h1 style="color: #0f0b0b;">Life-Book</h1></a>
+                <a href="/home" style="text-decoration: none;"><h1 style="color: #0f0b0b;font-style: italic;">Life-Book</h1></a>
             </div>
             <div class="nav-right">
                 <a href="/home"><button class="profile-button">Home</button></a>
@@ -339,10 +339,12 @@
             <img th:if="${session.user.imageUrl}" th:src="${session.user.imageUrl}" alt="Profile Picture" class="profile-picture">
             <div class="profile-info">
                 <h1 th:text="${session.user.username}"></h1>
+                <span th:if="${session.user.prime}" style="color: #1DA1F2;">✔</span>
                 <p th:text="${session.user.email}"></p>
                 <p th:if="${session.user.bio}">Bio: <span th:text="${session.user.bio}"></span> </p>
                 <div class="profile-actions">
                    <a href="/edit-profile"> <button class="edit-profile-btn">Edit Profile</button></a>
+                   <a th:if="${!session.user.prime}" href="/prime"> <button class="edit-profile-btn">Become Prime Member</button></a>
                 </div>
             </div>
         </section>

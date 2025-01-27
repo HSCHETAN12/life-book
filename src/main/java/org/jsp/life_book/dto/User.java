@@ -54,6 +54,8 @@ public class User {
 	private String bio;
 	private String imageUrl;
 	
+	private boolean prime;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	 List<User> followers=new ArrayList<User>();
 	@ManyToMany(fetch = FetchType.EAGER)
